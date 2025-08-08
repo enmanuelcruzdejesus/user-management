@@ -49,6 +49,15 @@ Open http://localhost:3000 — the UI lists users, paginates, and lets you add/e
 cd api
 npm test             # Jest  + mock Firebase
 
+2. Approach
+React     ─HTTP─► Express API ─► Firebase RTDB (/users)
+  ▲                       ▲
+  │   React-Query         └─ OpenWeather ZIP → lat/lon/timezone
+Bootstrap UI
+Layered structure: routes → controllers → services → Firebase .
+Security middlewares: Helmet, CORS allow-list, express-rate-limit, xss-clean.
+Offset pagination: GET /users?page=2&limit=10.
+
 3 Implemented features
 Category	Feature
 API	CRUD /users (GET paginated, POST, PUT, DELETE)
