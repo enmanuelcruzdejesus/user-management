@@ -7,26 +7,44 @@ import {
   useLocalTime,
 } from '../hooks/useUsers';
 
-import Spinner   from '../components/Spinner';
-import UserCard  from '../components/UserCard';
-import UserForm  from '../components/UserForm';
+import Spinner    from '../components/Spinner';
+import UserCard   from '../components/UserCard';
+import UserForm   from '../components/UserForm';
+import Paginator  from '../components/Paginator';   // ⬅️ new import
 
 export default function UsersPage() {
-  const { data: users = [], isLoading } = useUsers();
+  /* ------------------------------------------------------------------
+     Pagination state
+  ------------------------------------------------------------------ */
+  const [page, setPage] = useState(1);
+  const limit = 5;                         // change to any page size
+
+  const { data, isLoading } = useUsers(page, limit);
+  const users = data?.users ?? [];
+
+  /* ------------------------------------------------------------------
+     Mutations
+  ------------------------------------------------------------------ */
   const createMut = useCreateUser();
   const updateMut = useUpdateUser();
   const deleteMut = useDeleteUser();
 
-  const [editing, setEditing]     = useState(null);
-  const [timeUserId, setTimeId]   = useState(null);
-  const { data: localTime }       = useLocalTime(timeUserId, { enabled: !!timeUserId });
+  /* ------------------------------------------------------------------
+     Local-time popup
+  ------------------------------------------------------------------ */
+  const [editing, setEditing]   = useState(null);
+  const [timeUserId, setTimeId] = useState(null);
+  const { data: localTime }     = useLocalTime(timeUserId, { enabled: !!timeUserId });
 
-  /* handlers */
+  /* ------------------------------------------------------------------
+     Handlers
+  ------------------------------------------------------------------ */
   const addUser    = payload => createMut.mutateAsync(payload);
-  const saveUser   = payload => updateMut.mutateAsync({ id: editing.id, patch: payload })
-                                     .then(() => setEditing(null));
-  const removeUser = id      => deleteMut.mutate(id);
+  const saveUser   = payload =>
+    updateMut.mutateAsync({ id: editing.id, patch: payload }).then(() => setEditing(null));
+  const removeUser = id => deleteMut.mutate(id);
 
+  /* ------------------------------------------------------------------ */
   if (isLoading) return <Spinner />;
 
   return (
@@ -40,6 +58,7 @@ export default function UsersPage() {
         </div>
       )}
 
+      {/* ---------------- User list ---------------- */}
       {users.map(u => (
         <UserCard
           key={u.id}
@@ -50,6 +69,14 @@ export default function UsersPage() {
         />
       ))}
 
+      {/* ---------------- Pagination bar ---------------- */}
+      <Paginator
+        page={page}
+        pages={data?.pages || 1}
+        onPage={setPage}
+      />
+
+      {/* ---------------- Form ---------------- */}
       <div className="card mt-4">
         <div className="card-header">
           {editing ? 'Edit User' : 'Add User'}

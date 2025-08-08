@@ -66,10 +66,51 @@ async function deleteUser(id) {
   await usersRef.child(id).remove();
 }
 
+async function listUsersPaginated({ limit = 10, page = 1, cursor }) {
+  limit = Number(limit);
+  if (limit <= 0) limit = 10;
+
+  // ──────────────────────────────────────────────────────────
+  // Cursor-based (preferred for large lists)
+  //   /users?cursor=<last-id>&limit=10
+  //   -> returns the next batch starting after cursor
+  // ──────────────────────────────────────────────────────────
+  if (cursor) {
+    const snap = await usersRef
+      .orderByKey()
+      .startAfter(cursor)
+      .limitToFirst(limit)
+      .once('value');
+
+    const data = snap.val() || {};
+    const ids = Object.keys(data);
+    return {
+      users: Object.values(data),
+      nextCursor: ids.length === limit ? ids[ids.length - 1] : null,
+    };
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // Offset pagination (page/limit). Simpler but scans N rows.
+  //   /users?page=2&limit=10
+  // ──────────────────────────────────────────────────────────
+  const offset = (Number(page) - 1) * limit;
+  const snap   = await usersRef.once('value');
+  const all    = Object.values(snap.val() || {});
+
+  return {
+    users: all.slice(offset, offset + limit),
+    total: all.length,
+    page: Number(page),
+    pages: Math.ceil(all.length / limit),
+  };
+}
+
 module.exports = {
   listUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
+  listUsersPaginated
 };

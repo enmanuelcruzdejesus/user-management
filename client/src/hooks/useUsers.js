@@ -10,12 +10,13 @@ const USERS_KEY = ['users'];
 
 /* --------------------------- Queries --------------------------- */
 
-export function useUsers() {
+export function useUsers(page = 1, limit = 10) {
   return useQuery({
-    queryKey: USERS_KEY,
-    queryFn: api.listUsers,
+    queryKey: [...USERS_KEY, page, limit],
+    queryFn: () => api.listUsers({ page, limit }),
+    keepPreviousData: true,          // smooth transitions
   });
-}
+ }
 
 export function useLocalTime(id, options = {}) {
   return useQuery({

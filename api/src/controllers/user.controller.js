@@ -3,9 +3,15 @@ const userService = require('../services/user.service');
 /**
  * GET /users
  */
-exports.listUsers = async (_req, res) => {
-  const users = await userService.listUsers();
-  res.json(users);
+exports.listUsers = async (req, res) => {
+  const { page, limit, cursor } = req.query;
+   const result = await userService.listUsersPaginated({
+    page,
+    limit,
+    cursor,
+  })
+  // const users = await userService.listUsers();
+  res.json(result);
 };
 
 /**

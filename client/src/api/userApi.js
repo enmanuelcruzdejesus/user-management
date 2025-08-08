@@ -33,9 +33,14 @@ async function http(method, url, body) {
 
 /* -------- CRUD wrappers ------------------------------------------------- */
 
-export function listUsers() {
-  return http('GET', `${BASE}/users`);
-}
+// export function listUsers() {
+//   return http('GET', `${BASE}/users`);
+// }
+
+export function listUsers({ page = 1, limit = 10 } = {}) {
+  const qs = new URLSearchParams({ page, limit });
+  return http('GET', `${BASE}/users?${qs.toString()}`);
+ }
 
 export function createUser({ name, zip }) {
   return http('POST', `${BASE}/users`, { name, zip });
