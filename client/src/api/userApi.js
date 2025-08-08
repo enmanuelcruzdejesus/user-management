@@ -27,15 +27,11 @@ async function http(method, url, body) {
     throw err;
   }
 
-  // No content (DELETE) ⇒ return void
+
   return res.status === 204 ? null : res.json();
 }
 
-/* -------- CRUD wrappers ------------------------------------------------- */
 
-// export function listUsers() {
-//   return http('GET', `${BASE}/users`);
-// }
 
 export function listUsers({ page = 1, limit = 10 } = {}) {
   const qs = new URLSearchParams({ page, limit });

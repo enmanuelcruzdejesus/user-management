@@ -10,28 +10,20 @@ import {
 import Spinner    from '../components/Spinner';
 import UserCard   from '../components/UserCard';
 import UserForm   from '../components/UserForm';
-import Paginator  from '../components/Paginator';   // ⬅️ new import
+import Paginator  from '../components/Paginator';   
 
 export default function UsersPage() {
-  /* ------------------------------------------------------------------
-     Pagination state
-  ------------------------------------------------------------------ */
   const [page, setPage] = useState(1);
-  const limit = 5;                         // change to any page size
+  const limit = 5;                         
 
   const { data, isLoading } = useUsers(page, limit);
   const users = data?.users ?? [];
 
-  /* ------------------------------------------------------------------
-     Mutations
-  ------------------------------------------------------------------ */
+
   const createMut = useCreateUser();
   const updateMut = useUpdateUser();
   const deleteMut = useDeleteUser();
 
-  /* ------------------------------------------------------------------
-     Local-time popup
-  ------------------------------------------------------------------ */
   const [editing, setEditing]   = useState(null);
   const [timeUserId, setTimeId] = useState(null);
   const { data: localTime }     = useLocalTime(timeUserId, { enabled: !!timeUserId });
@@ -69,7 +61,6 @@ export default function UsersPage() {
         />
       ))}
 
-      {/* ---------------- Pagination bar ---------------- */}
       <Paginator
         page={page}
         pages={data?.pages || 1}

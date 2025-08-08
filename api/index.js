@@ -2,8 +2,15 @@
 require('dotenv').config();            // .env ➜ process.env.*
 const express = require('express');
 const cors = require('cors');
-
+const helmet  = require('helmet');
+const xss     = require('xss-clean');
+const rateLimiter = require('./src/middlewares/rateLimiter.middleware');
 const app = express();
+
+/* ────────── Security middleware ────────── */
+app.use(helmet());
+app.use(rateLimiter);
+
 
 // Global middleware
 app.use(cors());                       // Allow React front-end origin
