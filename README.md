@@ -70,5 +70,5 @@ For simplicity OpenWeather errors bubble up as 502/500 JSON errors.
 
 5 Testing done
 UnitTest: 	user.service create / read / update / delete with in-memory Firebase mock	npm test
-Manual UI	Add/edit/delete via browser, pagination buttons, local-time fetch	npm run dev (both layers)
-The test suite stubs external network (OpenWeather) and Firebase writes, ensuring deterministic runs without hitting third-party APIs.
+Manual UI	Add/edit/delete via browser, pagination buttons, local-time fetch	npm run dev (both layers) The test suite stubs external network (OpenWeather) and Firebase writes,
+ensuring deterministic runs without hitting third-party APIs.
