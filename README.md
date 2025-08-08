@@ -56,7 +56,7 @@ API	CRUD /users (GET paginated, POST, PUT, DELETE)
 Offset pagination ?page=&limit=
 Geo-enrichment (lat/lon/timezone) via OpenWeather
 Persistence	Firebase Realtime Database
-Security	Helmet headers, rate-limit (100 req/15 min/IP), XSS clean, CORS, Firebase Auth (Pending)
+Security	Helmet headers, rate-limit (100 req/15 min/IP),  CORS, Firebase Auth (Pending)
 Validation	Joi schemas via middleware
 React client	User list, Bootstrap UI, add/edit/delete cards, local-time alert, paginated list
 Tooling	Jest unit tests (service) 
